@@ -23,6 +23,23 @@ export default class MySQL {
     return this._instance || (this._instance = new this());
   }
 
+  public static execQuery(query: string, callback: Function) {
+    this.instance.cnn.query(query, (err, results: Object[], fields) => {
+      if (err) {
+        console.log('Query Error');
+        console.log(err);
+        return callback(err);
+      }
+
+      if (results.length === 0) {
+        callback('No data found');
+      } else {
+        callback(null, results)
+      }
+
+    })
+  }
+
   private connectDB() {
     this.cnn.connect((err: mysql.MysqlError) => {
       if (err) {
